@@ -11,13 +11,21 @@ public class Meal {
 
     private final int calories;
 
-    private long id = -1;
+    private long id;
 
-    public Meal(LocalDateTime dateTime, String description, int calories) {
+    public Meal(long id, LocalDateTime dateTime, String description, int calories) {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
     }
+
+    public Meal(LocalDateTime dateTime, String description, int calories) {
+        id = -1;
+        this.dateTime = dateTime;
+        this.description = description;
+        this.calories = calories;
+    }
+
 
     public LocalDateTime getDateTime() {
         return dateTime;
@@ -50,8 +58,9 @@ public class Meal {
     @Override
     public String toString() {
         return
-                "dateTime=" + dateTime +
-                ", description='" + description + '\'' +
+                "id=" + id +
+                        ", dateTime=" + dateTime +
+                        ", description='" + description + '\'' +
                         ", calories=" + calories;
     }
 }

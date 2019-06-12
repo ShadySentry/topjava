@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class MealInMemmoryDao implements MealDao {
+public class MealInMemoryDao implements MealDao {
     private static ConcurrentSkipListMap<Long, Meal> meals = null;
-    private static final Logger log = getLogger(MealInMemmoryDao.class);
+    private static final Logger log = getLogger(MealInMemoryDao.class);
 
-    public MealInMemmoryDao() {
+    public MealInMemoryDao() {
         if (meals == null) {
             meals = new ConcurrentSkipListMap<>();
         }

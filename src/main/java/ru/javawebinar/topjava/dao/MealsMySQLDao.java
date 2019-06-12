@@ -2,7 +2,7 @@ package ru.javawebinar.topjava.dao;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.DbUtil;
+import ru.javawebinar.topjava.util.SQLDbUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ public class MealsMySQLDao {
     private static final Logger log = getLogger(MealToDao_.class);
 
     public MealsMySQLDao() {
-        connection = DbUtil.getConnection();
+        connection = SQLDbUtil.getConnection();
         try {
             log.debug("Connected to " + connection.getSchema());
         } catch (SQLException e) {
