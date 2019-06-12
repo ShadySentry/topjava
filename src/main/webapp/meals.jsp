@@ -32,7 +32,7 @@
             </td>
             <td>${meal.calories}</td>
             <td>${meal.description}</td>
-            <td>${meal.excess} bac</td>
+            <td>${meal.excess}</td>
         </tr>
     </c:forEach>
     </tbody>
