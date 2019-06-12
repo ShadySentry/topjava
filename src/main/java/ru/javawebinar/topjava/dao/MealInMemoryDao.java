@@ -2,7 +2,9 @@ package ru.javawebinar.topjava.dao;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.InitializeMetadataUtil;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
@@ -14,11 +16,12 @@ public class MealInMemoryDao implements MealDao {
     private static final Logger log = getLogger(MealInMemoryDao.class);
 
     public MealInMemoryDao() {
-        if (meals == null) {
-            meals = new ConcurrentSkipListMap<>();
-        }
-    }
 
+        meals = new ConcurrentSkipListMap<>();
+        List<Meal> mealList = InitializeMetadataUtil.getMeals();
+        mealList.forEach(meal -> meals.put(meal.getId(), meal));
+
+    }
 
     public long create(Meal meal) {
         long pKey = -1;
