@@ -14,6 +14,10 @@ public interface MealDao {
 
     boolean delete(Meal meal);
 
+    List<Meal> getAll();
+
+
+
 //    Optional<T> get(long id);
 //
 //    List<T> getAll();

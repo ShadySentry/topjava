@@ -33,6 +33,11 @@
             <td>${meal.calories}</td>
             <td>${meal.description}</td>
             <td>${meal.excess}</td>
+            <td>
+                <form method="post" name="delete" >
+                    <input type="submit" name="delete" value="Удалить" formmethod="post">
+                </form>
+            </td>
         </tr>
     </c:forEach>
     </tbody>

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.InitializeMetadataUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -65,5 +66,10 @@ public class MealInMemoryDao implements MealDao {
                 .filter(entry -> Objects.equals(entry.getValue(), meal))
                 .map(ConcurrentSkipListMap.Entry::getKey)
                 .collect(Collectors.toList()).get(0);
+    }
+
+    @Override
+    public List<Meal> getAll() {
+        return new ArrayList<>(meals.values());
     }
 }

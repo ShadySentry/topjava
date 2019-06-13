@@ -43,7 +43,7 @@ public class MealServlet extends HttpServlet {
     }
 
     private List<MealTo> getAllMeals() {
-        List<Meal> allMeals = new ArrayList<>(InitializeMetadataUtil.getMeals());
+        List<Meal> allMeals = meals.getAll();
         allMeals.addAll(InitializeMetadataUtil.getMealsWithExcess());
 
         return MealsUtil.getFilteredWithExcessInOnePass2(allMeals, LocalTime.of(0, 1), LocalTime.of(23, 59), 2000);
