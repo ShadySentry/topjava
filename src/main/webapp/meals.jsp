@@ -37,7 +37,6 @@
                 <td><input size="3" type="number" value=${meal.calories} name="calories"></td>
                 <td><input size="3" type="text" value=${meal.excess} name="excess"></td>
                 <td>
-                        <%--                <input type="button" name="edit" value="Редактировать">--%>
                     <input type="submit" name="edit" value="Редактировать">
                     <input type="submit" name="delete" value="Удалить">
                 </td>

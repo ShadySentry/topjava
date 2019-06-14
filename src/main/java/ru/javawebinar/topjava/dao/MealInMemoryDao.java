@@ -57,6 +57,16 @@ public class MealInMemoryDao implements MealDao {
         return false;
     }
 
+    public boolean delete(long id){
+        if(id>0 && meals.containsKey(id)){
+            Meal meal= meals.remove(id);
+            if(meal!=null){
+                return true;
+            }
+        }
+        return false;
+    }
+
     long getKey(Meal meal) {
         if (!meals.containsValue(meal)) {
             return -1;

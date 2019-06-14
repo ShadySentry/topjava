@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.InitializeMetadataUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -45,17 +48,22 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         Map parameters = req.getParameterMap();
         if (parameters.containsKey("edit")) {
-            Meal meal = convertToMeal(parameters);
+            Meal meal = convertToMeal(req);
             if (meal != null) {
                 meals.update(meal);
             }
         } else if (parameters.containsKey("delete")) {
-
+            meals.delete(Long.valueOf((String)req.getParameter("id")));
         }
 
-        super.doPost(req, resp);
+        getServletContext().setAttribute("meals",getAllMeals());
+        getServletContext().getRequestDispatcher("/meals.jsp").forward(req, resp);
+//        RequestDispatcher dispatcher = req.getRequestDispatcher("/meals.jsp");
+//        req.setAttribute("meals",getAllMeals());
+//        super.doPost(req, resp);
     }
 
     private List<MealTo> getAllMeals() {
@@ -65,34 +73,21 @@ public class MealServlet extends HttpServlet {
         return MealsUtil.getFilteredWithExcessInOnePass2(allMeals, LocalTime.of(0, 1), LocalTime.of(23, 59), 2000);
     }
 
-    private Meal convertToMeal(Map parameters) {
-        if (!(parameters.containsKey("id") && parameters.containsKey("date") && parameters.containsKey("description") && parameters.containsKey("calories"))) {
+    private Meal convertToMeal(HttpServletRequest parameters) {
+
+        try {
+
+            long id =Long.parseLong((String)parameters.getParameter("id"));
+            LocalDateTime date = LocalDateTime.parse((String) parameters.getParameter("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            String description=(String) parameters.getParameter("description");
+            int calories=Integer.parseInt((String) parameters.getParameter("calories"));
+
+            return new Meal(id,date,description,calories);
+        } catch (NumberFormatException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
             return null;
         }
-
-        final long id;
-        final LocalDateTime date;
-        final String[] description = new String[1];
-        final int calories;
-
-        parameters.forEach((k, v) -> {
-            switch ((String) k) {
-                case "id":
-                    id = Long.parseLong((String) v);
-                    break;
-                case "date":
-                    description[0] = (String) v;
-                    break;
-                case "description":
-
-            }
-        });
-
-        long id = Long.parseLong((String) (parameters.get("id")));
-        LocalDateTime date = LocalDateTime.parse((String) parameters.get("date"));
-        String description = (String) parameters.get("description");
-        int calories = Integer.parseInt((String) parameters.get("calories"));
-        return new Meal(id, date, description, calories);
     }
 
 }
