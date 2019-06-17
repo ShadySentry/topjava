@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.repository.inmemory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -11,6 +10,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 //@Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
@@ -25,33 +25,39 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal) {
-        log.info("create {}",meal);
+        log.info("create {}", meal);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
             return meal;
         }
         // treat case: update, but absent in storage
-        log.info("update {}",meal);
+        log.info("update {}", meal);
         return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
-    public boolean delete(int id) {
-        log.info("delete {}",id);
+    public boolean delete(int id, int userId) {
+        log.info("delete {}", id);
+        if (repository.get(id).getUserId() != userId) {
+            log.warn("Cant delete meal . Cause - wrong user id");
+            return false;
+        }
         return repository.remove(id) != null;
     }
 
     @Override
-    public Meal get(int id) {
-        log.info("get {}",id);
-        return repository.get(id);
+    public Meal get(int id, int userId) {
+        log.info("get {}", id);
+        Meal meal = repository.get(id);
+        return meal.getUserId() == userId ? meal : null;
     }
 
     @Override
-    public Collection<Meal> getAll() {
+    public Collection<Meal> getAll(int userId) {
         log.info("getAll");
-        return repository.values();
+        return repository.values().stream()
+                .filter(meal -> meal.getUserId() == userId).collect(Collectors.toList());
     }
 }
 
