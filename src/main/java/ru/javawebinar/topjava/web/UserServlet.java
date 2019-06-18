@@ -1,10 +1,15 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepositoryImpl;
+import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.service.UserServiceImpl;
+import ru.javawebinar.topjava.web.user.AdminRestController;
+import ru.javawebinar.topjava.web.user.ProfileRestController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,18 +23,23 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
-    UserRepository repository;
+    //    UserRepository repository;
+//    UserService service;
+    @Autowired
+    AdminRestController controller;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        repository = new InMemoryUserRepositoryImpl();
+//        repository = new InMemoryUserRepositoryImpl();
+//        service = new UserServiceImpl(new InMemoryUserRepositoryImpl());
+        controller = new AdminRestController();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("forward to users");
-        request.setAttribute("users", repository.getAll());
+        request.setAttribute("users", controller.getAll());
         request.getRequestDispatcher("/users.jsp").forward(request, response);
     }
 
@@ -47,7 +57,12 @@ public class UserServlet extends HttpServlet {
                 EnumSet.of(Role.ROLE_ADMIN));
 
         log.info(user.isNew() ? "Create {}" : "Update {}", user);
-        repository.save(user);
+//        repository.save(user);
+        if (user.isNew()) {
+            controller.create(user);
+        } else {
+            controller.update(user, Integer.valueOf(id));
+        }
         response.sendRedirect("users");
 //        super.doPost(request, response);
     }
