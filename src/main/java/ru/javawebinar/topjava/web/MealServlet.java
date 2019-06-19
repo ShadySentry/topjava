@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepositoryImpl;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -16,7 +17,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -26,12 +30,12 @@ public class MealServlet extends HttpServlet {
     private MealRestController controller;
     private ConfigurableApplicationContext applicationContext;
 
-    private MealRepository repository;
+//    private MealRepository repository;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        repository = new InMemoryMealRepositoryImpl();
+//        repository = new InMemoryMealRepositoryImpl();
         applicationContext = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         controller = applicationContext.getBean(MealRestController.class);
     }
@@ -58,28 +62,48 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
         switch (action == null ? "all" : action) {
             case "delete":
                 int id = getId(request);
                 log.info("Delete {}", id);
-                repository.delete(id, 1);
+                controller.delete(id);
                 response.sendRedirect("meals");
                 break;
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        repository.get(getId(request), 1);
+                        controller.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
+                break;
+            case "filter":
+                log.info("filter");
+                if (request.getParameter("fromDate") == null || request.getParameter("toDate") == null
+                        || request.getParameter("fromTime") == null || request.getParameter("toTime") == null) {
+                    break;
+                }
+                try {
+                    LocalDate fromDate = LocalDate.parse(request.getParameter("fromDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    LocalDate toDate = LocalDate.parse(request.getParameter("toDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    LocalTime fromTime = LocalTime.parse(request.getParameter("fromTime"), DateTimeFormatter.ofPattern("HH:mm"));
+                    LocalTime toTime = LocalTime.parse(request.getParameter("toTime"), DateTimeFormatter.ofPattern("HH:mm"));
+                    request.setAttribute("meals", controller.getFilteredWithExcess(fromDate, toDate, fromTime, toTime));
+                } catch (Exception e) {
+                    log.error("filter in doDet {}",e);
+                    throw new NotFoundException("cant use current filter");
+                }finally {
+                    request.getRequestDispatcher("/meals.jsp").forward(request,response);
+                }
                 break;
             case "all":
             default:
                 log.info("getAll");
                 request.setAttribute("meals",
-                        MealsUtil.getWithExcess(repository.getAll(1), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                        controller.getAllWithExcess());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

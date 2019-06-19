@@ -10,7 +10,9 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,31 +40,33 @@ public class MealRestController {
         service.create(meal, authUserId());
     }
 
-    public void delete(Meal meal) {
-        log.info("delete {}", meal);
-        service.delete(meal, authUserId());
+    public void delete(int id) {
+        log.info("delete {}", id);
+        service.delete(id, authUserId());
     }
 
-    public Meal get(Meal meal) {
-        log.info("update {}", meal);
-        return service.get(meal, authUserId());
+    public Meal get(int mealId) {
+        log.info("update {}", mealId);
+        return service.get(mealId, authUserId());
     }
 
-    public List<Meal> getAll(int userId) {
+    public List<Meal> getAll() {
         log.info("get all");
-        return new ArrayList(service.getAll(userId));
+        return new ArrayList(service.getAll(authUserId()));
     }
 
     public List<MealTo> getAllWithExcess() {
         log.info("getAllWithExcess");
         return service.getAllWithExcess(authUserId(), SecurityUtil.authUserCaloriesPerDay());
     }
-//    public List<MealTo> getFilteredWithExcess(){
-//        log.info("getFilteredWithExcess");
-//        return service.getFilteredWithExcess(authUserId(),SecurityUtil.authUserCaloriesPerDay(),
-//                LocalDateTime.of(2015, Month.MAY, 30, 10, 0).,
-//                LocalDateTime.of(2016, Month.MAY, 31, 20, 0));
-//    }
+
+    public List<MealTo>getWithExcess(){
+        return MealsUtil.getWithExcess(getAll(),SecurityUtil.authUserCaloriesPerDay());
+    }
+    public List<MealTo> getFilteredWithExcess(LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime){
+        log.info("getFilteredWithExcess");
+        return service.getFilteredWithExcess(authUserId(),SecurityUtil.authUserCaloriesPerDay(),fromDate,toDate, fromTime,toTime);
+    }
 
 
 }

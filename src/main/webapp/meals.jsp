@@ -51,4 +51,26 @@
     </table>
 </section>
 </body>
+<section>
+
+    <form action="meals?action=filter" method="get" target="_self">
+        <dl>
+            <dt>From date:
+                <input type="date" name="fromDate" value="2014-10-10">
+                To date:
+                <input type="date" name="toDate" itemid="toDate" value="2019-10-10"></dt>
+        </dl>
+        <dl>
+            <dt>
+                From time:<input type="time" name="fromTime" value="09:59">
+                To time:<input type="time" name="toTime" value="14:01">
+            </dt>
+        </dl>
+        <input type="hidden" name="action" value="filter">
+        <button type="submit">Submit</button>
+        <button type="submit" formmethod="post">Submit using POST</button>
+        <a href="meals?action=filter&fromDate=${fromDate}&toDate=${toDate}&fromTime=${fromTime}&toTime=${toTime}">Update</a>
+        <%--        fromDate=&toDate=&fromTime=&toTime=--%>
+    </form>
+</section>
 </html>
