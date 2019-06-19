@@ -5,9 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepositoryImpl;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -82,21 +79,23 @@ public class MealServlet extends HttpServlet {
                 break;
             case "filter":
                 log.info("filter");
-                if (request.getParameter("fromDate") == null || request.getParameter("toDate") == null
-                        || request.getParameter("fromTime") == null || request.getParameter("toTime") == null) {
-                    break;
-                }
+
                 try {
-                    LocalDate fromDate = LocalDate.parse(request.getParameter("fromDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    LocalDate toDate = LocalDate.parse(request.getParameter("toDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    LocalTime fromTime = LocalTime.parse(request.getParameter("fromTime"), DateTimeFormatter.ofPattern("HH:mm"));
-                    LocalTime toTime = LocalTime.parse(request.getParameter("toTime"), DateTimeFormatter.ofPattern("HH:mm"));
+                    LocalDate fromDate = request.getParameter("fromDate").length() == 0 ? null :
+                            LocalDate.parse(request.getParameter("fromDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    LocalDate toDate = request.getParameter("toDate").length() == 0 ? null :
+                            LocalDate.parse(request.getParameter("toDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    LocalTime fromTime = request.getParameter("fromTime").length() == 0 ? null :
+                            LocalTime.parse(request.getParameter("fromTime"), DateTimeFormatter.ofPattern("HH:mm"));
+                    LocalTime toTime = request.getParameter("toTime").length() == 0 ? null :
+                            LocalTime.parse(request.getParameter("toTime"), DateTimeFormatter.ofPattern("HH:mm"));
+
                     request.setAttribute("meals", controller.getFilteredWithExcess(fromDate, toDate, fromTime, toTime));
                 } catch (Exception e) {
-                    log.error("filter in doDet {}",e);
+                    log.error("filter in doDet {}", e);
                     throw new NotFoundException("cant use current filter");
-                }finally {
-                    request.getRequestDispatcher("/meals.jsp").forward(request,response);
+                } finally {
+                    request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 }
                 break;
             case "all":

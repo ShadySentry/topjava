@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -15,6 +16,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MealServiceImpl implements MealService {
@@ -34,7 +36,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public Meal create(Meal meal, int userId) {
-        if (meal.getUserId()==null) {
+        if (meal.getUserId() == null) {
             meal.setUserId(userId);
         }
         log.info("create {}", meal);
@@ -74,6 +76,17 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<MealTo> getFilteredWithExcess(int userId, int caloriesPerDay, LocalDate fromDate, LocalDate toDate, LocalTime startTime, LocalTime endTime) {
-        return MealsUtil.getFilteredWithExcess(repository.getAllFiltered(userId, fromDate, toDate), caloriesPerDay, startTime, endTime);
+        Collection<Meal> meals;
+        if (fromDate != null && toDate != null) {
+            meals = repository.getAllFiltered(userId, fromDate, toDate);
+        } else {
+            meals = repository.getAll(userId);
+        }
+
+        if (startTime != null && endTime != null) {
+            return MealsUtil.getFilteredWithExcess(meals, caloriesPerDay, startTime, endTime);
+        } else {
+            return MealsUtil.getWithExcess(meals, caloriesPerDay);
+        }
     }
 }

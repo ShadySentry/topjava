@@ -11,9 +11,7 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,12 +58,14 @@ public class MealRestController {
         return service.getAllWithExcess(authUserId(), SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public List<MealTo>getWithExcess(){
-        return MealsUtil.getWithExcess(getAll(),SecurityUtil.authUserCaloriesPerDay());
+    public List<MealTo> getWithExcess() {
+        return MealsUtil.getWithExcess(getAll(), SecurityUtil.authUserCaloriesPerDay());
     }
-    public List<MealTo> getFilteredWithExcess(LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime){
+
+    public List<MealTo> getFilteredWithExcess(LocalDate fromDate, LocalDate toDate, LocalTime fromTime, LocalTime toTime) {
         log.info("getFilteredWithExcess");
-        return service.getFilteredWithExcess(authUserId(),SecurityUtil.authUserCaloriesPerDay(),fromDate,toDate, fromTime,toTime);
+
+        return service.getFilteredWithExcess(authUserId(), SecurityUtil.authUserCaloriesPerDay(), fromDate, toDate, fromTime, toTime);
     }
 
 
