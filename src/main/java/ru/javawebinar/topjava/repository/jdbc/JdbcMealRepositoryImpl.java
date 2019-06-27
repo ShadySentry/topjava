@@ -11,7 +11,9 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class JdbcMealRepositoryImpl implements MealRepository {
@@ -44,9 +46,8 @@ public class JdbcMealRepositoryImpl implements MealRepository {
             meal.setId(newKey.intValue());
         } else if (namedParameterJdbcTemplate.update(
                 "UPDATE meals SET description=:description, datetime=:datetime," +
-                        "calories=:calories, user_id=:user_id WHERE id=:id", map) == 0) {
+                        "calories=:calories, user_id=:user_id WHERE id=:id AND user_id=:user_id", map) == 0) {
             return null;
-
         }
         return meal;
     }
@@ -64,12 +65,17 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return jdbcTemplate.query("SELECT * from  meals where user_id=?", ROW_MAPPER, userId);
+        return jdbcTemplate.query("SELECT * from  meals where user_id=? order by datetime desc", ROW_MAPPER, userId);
+//        .stream()
+//                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+//                .collect(Collectors.toList());
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        List<Meal> meals = jdbcTemplate.query("select * from meals where datetime between ? and ?",ROW_MAPPER,startDate,endDate,userId);
-        return null;
+        return jdbcTemplate.query("select * from meals where (datetime between ? and ?) and user_id=? order by datetime desc", ROW_MAPPER, startDate, endDate, userId);
+//        .stream()
+//                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+//                .collect(Collectors.toList());
     }
 }
