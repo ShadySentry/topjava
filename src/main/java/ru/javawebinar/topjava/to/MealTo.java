@@ -43,12 +43,12 @@ public class MealTo {
 
     @Override
     public String toString() {
-        return "UserMealWithExceed{" +
+        return "MealTo{" +
                 "id=" + id +
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-                ", exceed=" + excess +
+                ", excess=" + excess +
                 '}';
     }
 }
