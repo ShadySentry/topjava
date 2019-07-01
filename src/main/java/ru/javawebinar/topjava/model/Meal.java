@@ -1,22 +1,42 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@NamedQueries({
+        @NamedQuery(name = Meal.DELETE,query = "DELETE from Meal m where m.id=:id and m.user.id=:userId"),
+        @NamedQuery(name = Meal.BY_USER, query = "SELECT m from Meal m where m.user.id=:userId"),
+        @NamedQuery(name = Meal.ALL_SORTED, query = "select m from Meal m where m.user=:UserId order by m.dateTime desc ")
+})
+
+@Entity
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","date_time"},name = "users_unique_email_idx")})
 public class Meal extends AbstractBaseEntity {
+    public static final String DELETE = "Meal.delete";
+    public static final String BY_USER = "Meal.getByUser";
+    public static final String ALL_SORTED = "Meal.getAllSorted";
+
+    @Column(name = "date_time",nullable = false,columnDefinition = "timestamp default now()")
+    @NotNull
     private LocalDateTime dateTime;
 
+    @Column(name = "description",nullable = false)
     private String description;
 
+    @Column(name = "calories",nullable = false,columnDefinition = "int default 0")
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public Meal() {
+    }
+
+    public Meal(Meal m){
+        this(m.getId(),m.getDateTime(),m.getDescription(),m.getCalories(),m.getUser());
     }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
@@ -28,6 +48,14 @@ public class Meal extends AbstractBaseEntity {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+    }
+
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories, User user){
+        super(id);
+        this.dateTime=dateTime;
+        this.description=description;
+        this.calories=calories;
+        this.user=user;
     }
 
     public LocalDateTime getDateTime() {
