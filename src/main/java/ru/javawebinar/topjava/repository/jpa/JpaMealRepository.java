@@ -3,8 +3,8 @@ package ru.javawebinar.topjava.repository.jpa;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,16 +22,25 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
+        User ref = em.getReference(User.class,userId);
+
 
         if(meal.isNew()){
+            meal.setUser(ref);
             em.persist(meal);
             return meal;
         }else {
+            Meal mealRef = em.getReference(Meal.class,meal.getId());
+            if(mealRef.getUser().getId()!=userId){
+                return null;
+            }
+            meal.setUser(ref);
             return em.merge(meal);
         }
     }
 
     @Override
+    @Transactional
     public boolean delete(int id, int userId) {
        return em.createNamedQuery(Meal.DELETE)
                 .setParameter("id",id)
@@ -41,7 +50,7 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = em.find(Meal.class, userId);
+        Meal meal = em.find(Meal.class, id);
 
         if(meal!=null){
             if(meal.getUser().getId()!=userId){
@@ -60,6 +69,10 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return null;
+        return em.createNamedQuery(Meal.BETWEEN)
+                .setParameter("id",userId)
+                .setParameter("fromDate",startDate)
+                .setParameter("toDate",endDate)
+                .getResultList();
     }
 }

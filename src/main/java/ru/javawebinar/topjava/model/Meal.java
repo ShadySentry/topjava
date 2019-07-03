@@ -9,7 +9,8 @@ import java.time.LocalTime;
 @NamedQueries({
         @NamedQuery(name = Meal.DELETE,query = "DELETE from Meal m where m.id=:id and m.user.id=:userId"),
         @NamedQuery(name = Meal.BY_USER, query = "SELECT m from Meal m where m.user.id=:userId"),
-        @NamedQuery(name = Meal.ALL_SORTED, query = "select m from Meal m where m.user=:UserId order by m.dateTime desc ")
+        @NamedQuery(name = Meal.ALL_SORTED, query = "select m from Meal m where m.user.id=:userId order by m.dateTime desc "),
+        @NamedQuery(name = Meal.BETWEEN,query = "SELECT m FROM Meal m where m.user.id=:id and m.dateTime BETWEEN :fromDate and :toDate")
 })
 
 @Entity
@@ -18,6 +19,7 @@ public class Meal extends AbstractBaseEntity {
     public static final String DELETE = "Meal.delete";
     public static final String BY_USER = "Meal.getByUser";
     public static final String ALL_SORTED = "Meal.getAllSorted";
+    public static final String BETWEEN = "Meal.getBetween";
 
     @Column(name = "date_time",nullable = false,columnDefinition = "timestamp default now()")
     @NotNull
@@ -29,15 +31,16 @@ public class Meal extends AbstractBaseEntity {
     @Column(name = "calories",nullable = false,columnDefinition = "int default 0")
     private int calories;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Meal() {
     }
 
-    public Meal(Meal m){
-        this(m.getId(),m.getDateTime(),m.getDescription(),m.getCalories(),m.getUser());
-    }
+//    public Meal(Meal m){
+//        this(m.getId(),m.getDateTime(),m.getDescription(),m.getCalories(),m.getUser());
+//    }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
         this(null, dateTime, description, calories);
@@ -103,7 +106,7 @@ public class Meal extends AbstractBaseEntity {
         return "Meal{" +
                 "id=" + id +
                 ", dateTime=" + dateTime +
-                ", description='" + description + '\'' +
+                ", description='" + description +
                 ", calories=" + calories +
                 '}';
     }
