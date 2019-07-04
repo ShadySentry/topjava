@@ -1,7 +1,11 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,7 +14,7 @@ import java.time.LocalTime;
         @NamedQuery(name = Meal.DELETE,query = "DELETE from Meal m where m.id=:id and m.user.id=:userId"),
         @NamedQuery(name = Meal.BY_USER, query = "SELECT m from Meal m where m.user.id=:userId"),
         @NamedQuery(name = Meal.ALL_SORTED, query = "select m from Meal m where m.user.id=:userId order by m.dateTime desc "),
-        @NamedQuery(name = Meal.BETWEEN,query = "SELECT m FROM Meal m where m.user.id=:id and m.dateTime BETWEEN :fromDate and :toDate")
+        @NamedQuery(name = Meal.BETWEEN,query = "SELECT m FROM Meal m where m.user.id=:id and m.dateTime BETWEEN :fromDate and :toDate  order by m.dateTime desc")
 })
 
 @Entity
@@ -26,13 +30,16 @@ public class Meal extends AbstractBaseEntity {
     private LocalDateTime dateTime;
 
     @Column(name = "description",nullable = false)
+    @NotBlank
     private String description;
 
     @Column(name = "calories",nullable = false,columnDefinition = "int default 0")
+    @Range(min=1)
     private int calories;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     public Meal() {
