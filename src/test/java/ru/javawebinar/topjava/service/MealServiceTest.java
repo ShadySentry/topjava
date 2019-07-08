@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -9,6 +10,7 @@ import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -39,6 +41,12 @@ public class MealServiceTest {
 
     private static StringBuilder results = new StringBuilder();
 
+    @Autowired
+    private MealService service;
+
+    @Autowired
+    private CacheManager cacheManager;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -62,8 +70,12 @@ public class MealServiceTest {
                 "\n---------------------------------");
     }
 
-    @Autowired
-    private MealService service;
+
+
+    @Before
+    public void setUp() throws Exception {
+        cacheManager.getCache("users").clear();
+    }
 
     @Test
     public void delete() throws Exception {

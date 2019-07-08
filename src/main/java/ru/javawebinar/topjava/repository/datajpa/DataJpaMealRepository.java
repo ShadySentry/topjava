@@ -26,15 +26,21 @@ public class DataJpaMealRepository implements MealRepository {
 
 //    @PersistenceContext
 //    private EntityManager em;
-    @Autowired
-    private DataJpaUserRepository userRepository;
+
+//    @Autowired
+//    private DataJpaUserRepository userRepository;
+
+//    @Autowired
+//    private UserService userService;
+
     @Override
     public Meal save(Meal meal, int userId) {
         if (!meal.isNew() && get(meal.getId(), userId) == null) {
             return null;
         }
         if(meal.isNew()) {
-            meal.setUser(userRepository.get(userId));
+//            meal.setUser(userService.get(userId));
+//            meal.setUser(userRepository.get(userId));
         }
         return crudRepository.save(meal);
     }
