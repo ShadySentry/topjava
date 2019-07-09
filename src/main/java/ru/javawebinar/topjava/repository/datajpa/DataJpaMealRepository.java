@@ -30,8 +30,8 @@ public class DataJpaMealRepository implements MealRepository {
 //    @Autowired
 //    private DataJpaUserRepository userRepository;
 
-//    @Autowired
-//    private UserService userService;
+    @Autowired
+    private UserService userService;
 
     @Override
     public Meal save(Meal meal, int userId) {
@@ -39,7 +39,7 @@ public class DataJpaMealRepository implements MealRepository {
             return null;
         }
         if(meal.isNew()) {
-//            meal.setUser(userService.get(userId));
+            meal.setUser(userService.get(userId));
 //            meal.setUser(userRepository.get(userId));
         }
         return crudRepository.save(meal);

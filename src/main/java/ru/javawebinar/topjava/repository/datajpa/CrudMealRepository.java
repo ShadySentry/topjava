@@ -13,9 +13,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     // null if updated meal do not belong to userId
-    @Transactional
-    @Modifying
-    Meal save(Meal meal, int userId);
+//    @Transactional
+//    @Modifying
+//    Meal save(Meal meal, int userId);
 
     // false if meal do not belong to userId
     @Transactional
@@ -25,10 +25,10 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
     // null if meal do not belong to userId
 //    @Query("select m from Meal m where m.id=:id and m.user.id=:userId")
-    Meal get(int id, int userId);
+//    Meal get(int id, int userId);
 
     // ORDERED dateTime desc
-    List<Meal> getAll(int userId);
+//    List<Meal> getAll(int userId);
 
     // ORDERED dateTime desc
 //    (name = Meal.GET_BETWEEN, query = "SELECT m FROM Meal m " +
