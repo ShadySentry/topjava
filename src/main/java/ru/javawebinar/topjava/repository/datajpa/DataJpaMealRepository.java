@@ -2,7 +2,9 @@ package ru.javawebinar.topjava.repository.datajpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
@@ -17,9 +19,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
+@Transactional(readOnly = true)
 public class DataJpaMealRepository implements MealRepository {
 
-    private static final Sort SORT_DATE = new Sort(Sort.Direction.DESC, "date_time");
+    private static final Sort SORT_DATE = new Sort(Sort.Direction.DESC, "dateTime");
 
     @Autowired
     private CrudMealRepository crudRepository;
@@ -33,7 +36,8 @@ public class DataJpaMealRepository implements MealRepository {
     @Autowired
     private UserService userService;
 
-    @Override
+    @Transactional
+    @Modifying
     public Meal save(Meal meal, int userId) {
         if (!meal.isNew() && get(meal.getId(), userId) == null) {
             return null;
@@ -45,12 +49,13 @@ public class DataJpaMealRepository implements MealRepository {
         return crudRepository.save(meal);
     }
 
-    @Override
+    @Transactional
+    @Modifying
     public boolean delete(int id, int userId) {
         Meal storedMeal = crudRepository.findById(id).orElse(null);
         if (storedMeal != null) {
             if (storedMeal.getUser().getId() != userId) {
-                throw new NotFoundException("Incorrect userId for meal");
+                return false;
             }
         }
         return crudRepository.delete(id, userId) != 0;
@@ -61,7 +66,7 @@ public class DataJpaMealRepository implements MealRepository {
         Meal storedMeal = crudRepository.findById(id).orElse(null);
         if (storedMeal != null && storedMeal.getUser() != null) {
             if (storedMeal.getUser().getId() != userId) {
-                throw new NotFoundException("Incorrect userId for meal");
+                return null;
             }
         }
         return storedMeal;
@@ -69,7 +74,7 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        List<Meal> storedMeals = crudRepository.findAll(SORT_DATE);
+        List<Meal> storedMeals=crudRepository.findAll(SORT_DATE);
         return storedMeals.stream().filter(m -> m.getUser().getId() == userId).collect(Collectors.toList());
     }
 
