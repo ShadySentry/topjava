@@ -78,6 +78,11 @@ public class MealServiceTest {
     }
 
     @Test
+    public void getAll() throws Exception {
+        assertMatch(service.getAll(USER_ID), MEALS);
+    }
+
+    @Test
     public void delete() throws Exception {
         service.delete(MEAL1_ID, USER_ID);
         assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
@@ -134,11 +139,6 @@ public class MealServiceTest {
         thrown.expect(NotFoundException.class);
         thrown.expectMessage("Not found entity with id=" + MEAL1_ID);
         service.update(MEAL1, ADMIN_ID);
-    }
-
-    @Test
-    public void getAll() throws Exception {
-        assertMatch(service.getAll(USER_ID), MEALS);
     }
 
     @Test
