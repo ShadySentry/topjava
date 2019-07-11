@@ -25,6 +25,8 @@ public class JdbcMealRepository implements MealRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final SimpleJdbcInsert insertMeal;
+//ToDo:Разделить JdbcMealRepository для HSQLDB (она не умеет работать с Java8 Time API) и Postgres через @Profile (для Postgres оставить LocalDateTime).
+//    https://refactoring.guru/ru/design-patterns/template-method
 
     @Autowired
     public JdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
