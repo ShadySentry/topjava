@@ -35,8 +35,8 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(/*profiles = {"datajpa"},*/resolver = ActiveDbProfileResolver.class)
-public class MealServiceTest {
+@ActiveProfiles(resolver = ActiveDbProfileResolver.class)
+public abstract class MealServiceTest {
     private static final Logger log = getLogger("result");
 
     private static StringBuilder results = new StringBuilder();
@@ -74,7 +74,7 @@ public class MealServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        cacheManager.getCache("users").clear();
+        cacheManager.getCache("meals").clear();
     }
 
     @Test

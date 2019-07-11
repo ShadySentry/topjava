@@ -11,44 +11,36 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
+    <!-- Change DB by comment/uncomment property-placeholder -->
 
-    <context:component-scan base-package="ru.javawebinar.**.repository.datajpa"/>
-    <jpa:repositories base-package="ru.javawebinar.**.repository.datajpa"/>
+    <!--    <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>-->
+    <!--    <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>-->
+
+
+    <!--    <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>-->
+
+    <!--<context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>-->
 
     <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
         <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
         <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
     </jdbc:initialize-database>
+<!--    LOGGING     -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
+        <property name="staticMethod" value="org.slf4j.bridge.SLF4JBridgeHandler.install"/>
+    </bean>
 
-<!--    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"-->
-<!--                                                                   p:dataSource-ref="dataSource"-->
-<!--                                                                   p:packagesToScan="ru.javawebinar.**.model">-->
-<!-- -->
+    <!--
+        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
+        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+            <constructor-arg ref="dataSource"/>
+        </bean>
 
-<!--    <property name="jpaPropertyMap">-->
-<!--        <map>-->
-<!--            <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>-->
-<!--            <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"-->
-<!--                   value="${hibernate.use_sql_comments}"/>-->
-<!--            <entry key="#{T(org.hibernate.cfg.AvailableSettings).JPA_PROXY_COMPLIANCE}" value="false"/>-->
-<!--            &lt;!&ndash;<entry key="#{T(org.hibernate.cfg.AvailableSettings).HBM2DDL_AUTO}" value="${hibernate.hbm2ddl.auto}"/>&ndash;&gt;-->
-<!--        </map>-->
-<!--    </property>-->
-
-<!--    <property name="jpaVendorAdapter">-->
-<!--        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"-->
-<!--              p:showSql="${jpa.showSql}">-->
-<!--        </bean>-->
-<!--    </property>-->
-<!--</bean>-->
-
-    <tx:annotation-driven/>
-
-    <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
-          p:entityManagerFactory-ref="entityManagerFactory"/>
-
-
+        <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+            <constructor-arg ref="jdbcTemplate"/>
+        </bean>
+    -->
+<!--    DB profiles     -->
     <beans profile="hsqldb">
         <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
 
@@ -67,9 +59,7 @@
             It uses java.util.logging and logged via jul-to-slf4j bridge
             https://stackoverflow.com/a/27296470/548473
         -->
-        <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
-            <property name="staticMethod" value="org.slf4j.bridge.SLF4JBridgeHandler.install"/>
-        </bean>
+
 
         <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
 
@@ -80,25 +70,13 @@
               p:username="${database.username}"
               p:password="${database.password}"/>
     </beans>
-
-    <beans profile="jdbc">
-        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
-        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-            <constructor-arg ref="dataSource"/>
-        </bean>
-
-        <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-            <constructor-arg ref="jdbcTemplate"/>
-        </bean>
-    </beans>
+<!--    CONNECTION PROFILES     -->
+                                       <!--     Jpa, Data-Jpa    -->
     <beans profile="jpa,datajpa">
-        <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
-    </beans>
-    <beans profile="jpa">
+
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
               p:dataSource-ref="dataSource"
               p:packagesToScan="ru.javawebinar.**.model">
-            <!--p:persistenceUnitName="persistenceUnit">-->
 
             <property name="jpaPropertyMap">
                 <map>
@@ -117,7 +95,32 @@
             </property>
         </bean>
 
+        <tx:annotation-driven/>
+
+        <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+              p:entityManagerFactory-ref="entityManagerFactory"/>
+        <context:component-scan base-package="ru.javawebinar.**.repository.datajpa"/>
+        <jpa:repositories base-package="ru.javawebinar.**.repository.datajpa"/>
+
     </beans>
+                                        <!--    JPA     -->
+    <beans profile="jpa">
+
+    </beans>
+                                        <!--    Data-Jpa    -->
     <beans profile="datajpa">
+        <context:component-scan base-package="ru.javawebinar.topjava.**.repository.datajpa"/>
+
+    </beans>
+                                        <!--    JDBC    -->
+    <beans profile="jdbc">
+        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
+        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+            <constructor-arg ref="dataSource"/>
+        </bean>
+        <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+            <constructor-arg ref="jdbcTemplate"/>
+        </bean>
     </beans>
 </beans>

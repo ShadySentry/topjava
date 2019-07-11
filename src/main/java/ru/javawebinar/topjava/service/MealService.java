@@ -52,7 +52,9 @@ public class MealService {
 
     @Cacheable("meals")
     public List<Meal> getAll(int userId) {
-        return repository.getAll(userId);
+        List<Meal> meals = repository.getAll(userId);
+        return meals;
+//        return repository.getAll(userId);
     }
 
     @CacheEvict(value = "meals", allEntries = true)
