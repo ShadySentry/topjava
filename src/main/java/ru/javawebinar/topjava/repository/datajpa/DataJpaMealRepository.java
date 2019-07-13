@@ -27,20 +27,23 @@ public class DataJpaMealRepository implements MealRepository {
     @Autowired
     private CrudMealRepository crudRepository;
 
+    @Autowired
+    CrudUserRepository userRepository;
+
 //    @PersistenceContext
 //    private EntityManager em;
 
 //    @Autowired
 //    private DataJpaUserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
     @Transactional
     @Modifying
     public Meal save(Meal meal, int userId) {
         if(meal.isNew()){
-            meal.setUser(userService.get(userId));
+            meal.setUser(userRepository.getOne(userId));
         }
         else{
             Meal savedMeal = crudRepository.findById(meal.getId()).orElse(null);
@@ -86,4 +89,6 @@ public class DataJpaMealRepository implements MealRepository {
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
         return crudRepository.getBetween(startDate, endDate, userId);
     }
+
+
 }

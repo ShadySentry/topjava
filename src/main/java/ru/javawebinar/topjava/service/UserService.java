@@ -54,4 +54,9 @@ public class UserService {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(repository.save(user), user.getId());
     }
+
+    @Cacheable("users")
+    public User getWithMeals(int id){
+        return repository.getWithMeals(id);
+    }
 }
