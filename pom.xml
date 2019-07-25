@@ -154,6 +154,13 @@
             <version>${hibernate.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.simpleflatmapper</groupId>
+            <artifactId>sfm-jdbc</artifactId>
+            <version>7.0.0</version>
+            <classifier>jdk9</classifier>
+        </dependency>
+
         <!--http://hibernate.org/validator/documentation/getting-started/#unified-expression-language-el-->
         <dependency>
             <groupId>org.glassfish</groupId>

@@ -5,7 +5,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -76,6 +75,12 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         assertMatch(user, USER);
     }
 
+    @Test
+    public void getWithMultipleRoles() throws Exception {
+        User user = service.get(ADMIN_ID);
+        assertMatch(user, ADMIN);
+    }
+
     @Test(expected = NotFoundException.class)
     public void getNotFound() throws Exception {
         service.get(1);
@@ -85,6 +90,12 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     public void getByEmail() throws Exception {
         User user = service.getByEmail("user@yandex.ru");
         assertMatch(user, USER);
+    }
+
+    @Test
+    public void getByEmailMultipleRoles() throws Exception {
+        User user = service.getByEmail("admin@gmail.com");
+        assertMatch(user, ADMIN);
     }
 
     @Test
