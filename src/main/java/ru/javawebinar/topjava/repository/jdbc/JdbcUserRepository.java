@@ -19,6 +19,7 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Repository
@@ -84,19 +85,46 @@ public class JdbcUserRepository implements UserRepository {
 //            return null;
 //        }
 //        return user;
+        String sqlQuery;
         if(user.isNew()){
-            jdbcTemplate.batchUpdate("insert into users (name,email,password,registered,enabled,calories_per_day) values (?,?,?,?,?,?)", new BatchPreparedStatementSetter() {
+            BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+            Number newKey = insertUser.executeAndReturnKey(parameterSource);
+            user.setId(newKey.intValue());
+            sqlQuery = "insert into users (name,email,password,registered,enabled,calories_per_day) values (?,?,?,?,?,?)";
+        }else{
+            sqlQuery = "update users set name=?,email=?,password=?,registered=?,enabled=?,calories_per_day=? where id=?";
+            jdbcTemplate.query("DELETE FROM user_roles WHERE user_id=?",ROW_MAPPER,user.getId());
+        }
+            jdbcTemplate.batchUpdate("insert into user_roles (user_id,role) values (?,?)", new BatchPreparedStatementSetter() {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
+//                    ps.setString(1,user.getName());
+//                    ps.setString(2,user.getEmail());
+//                    ps.setString(3,user.getPassword());
+//                    ps.setTimestamp(4, Timestamp.from(user.getRegistered().toInstant()));
+//                    ps.setBoolean(5,user.isEnabled());
+//                    ps.setInt(6,user.getCaloriesPerDay());
+//                    if(!user.isNew()){
+//                        ps.setInt(7,user.getId());
+//                    }
+                    ps.setInt(1,user.getId());
+                    int counter=0;
+                    for(Role role:user.getRoles()){
+                        if(counter==i){
+                            ps.setString(2,role.name());
+                        }
+                        counter++;
 
+                    }
+//                    ps.setString(2,Role.ROLE_ADMIN.name());
                 }
 
                 @Override
                 public int getBatchSize() {
-                    return 0;
+                    return user.getRoles().size();
                 }
             });
-        }
+
 
         return user;
     }
