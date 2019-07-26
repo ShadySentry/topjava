@@ -54,7 +54,7 @@ public class JdbcUserRepository implements UserRepository {
                     u.setRoles(List.of(Role.getFromString(rs.getString("role"))));
                     usersList.add(u);
                 } else {
-                    existedUser.getRoles().add(Role.getFromString(rs.getString("role")));
+                    existedUser.addRole(Role.getFromString(rs.getString("role")));
                 }
             }
             return usersList;
@@ -93,7 +93,10 @@ public class JdbcUserRepository implements UserRepository {
             sqlQuery = "insert into users (name,email,password,registered,enabled,calories_per_day) values (?,?,?,?,?,?)";
         }else{
             sqlQuery = "update users set name=?,email=?,password=?,registered=?,enabled=?,calories_per_day=? where id=?";
-            jdbcTemplate.query("DELETE FROM user_roles WHERE user_id=?",ROW_MAPPER,user.getId());
+            jdbcTemplate.update(sqlQuery,
+                    user.getName(), user.getEmail(),user.getPassword(),user.getRegistered(),user.isEnabled(),user.getCaloriesPerDay(),user.getId());
+            jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?",user.getId());
+
         }
             jdbcTemplate.batchUpdate("insert into user_roles (user_id,role) values (?,?)", new BatchPreparedStatementSetter() {
                 @Override
@@ -116,7 +119,6 @@ public class JdbcUserRepository implements UserRepository {
                         counter++;
 
                     }
-//                    ps.setString(2,Role.ROLE_ADMIN.name());
                 }
 
                 @Override
