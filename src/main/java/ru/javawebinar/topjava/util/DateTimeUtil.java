@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.util;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -36,6 +37,14 @@ public class DateTimeUtil {
 
     public static LocalDate parseLocalDate(@Nullable String str) {
         return StringUtils.isEmpty(str) ? null : LocalDate.parse(str);
+    }
+
+    public static LocalDate getLocalDate(LocalDateTime localDateTime){
+        return localDateTime.toLocalDate();
+    }
+
+    public static LocalTime getLocalTime(LocalDateTime localDateTime){
+        return localDateTime.toLocalTime();
     }
 
     public static LocalTime parseLocalTime(@Nullable String str) {

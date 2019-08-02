@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectReader;
 
@@ -10,6 +11,7 @@ import static ru.javawebinar.topjava.web.json.JacksonObjectMapper.getMapper;
 
 public class JsonUtil {
 
+    @JsonIgnoreProperties("excess")
     public static <T> List<T> readValues(String json, Class<T> clazz) {
         ObjectReader reader = getMapper().readerFor(clazz);
         try {
@@ -30,6 +32,7 @@ public class JsonUtil {
     public static <T> String writeValue(T obj) {
         try {
             return getMapper().writeValueAsString(obj);
+
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Invalid write to JSON:\n'" + obj + "'", e);
         }
