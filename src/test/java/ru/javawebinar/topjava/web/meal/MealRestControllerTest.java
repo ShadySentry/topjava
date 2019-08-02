@@ -8,7 +8,6 @@ import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.SecurityUtil;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import javax.json.Json;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -94,20 +93,11 @@ class MealRestControllerTest extends AbstractMealControllerTest {
 //                LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL3, MEAL2, MEAL1);
     @Test
     void testGetBetween() throws Exception{
-
-        String json = Json.createObjectBuilder()
-                .add("startDateTime","2011-08-01T19:40")
-                .add("endDateTime","2019-08-01T19:40")
-                .build().toString();
-        mockMvc.perform(post(REST_URL+"/filter")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-//                .param("endTime","2019-08-01T19:40")
-        )
+        mockMvc.perform(get(REST_URL+"/between?startDateTime=2015-05-30T07:00:00.000&endDateTime=2015-05-30T23:00:00.000"))//2000-10-31T01:30:00.000-05:00
                 .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL3, MEAL2, MEAL1));
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJsonWithExcess(MEAL3, MEAL2, MEAL1));
     }
 
 

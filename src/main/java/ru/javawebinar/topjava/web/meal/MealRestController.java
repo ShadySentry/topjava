@@ -23,60 +23,57 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @RestController
-@RequestMapping(value = MealRestController.REST_URL,produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealRestController extends AbstractMealController {
 
     public static final String REST_URL = "/rest/meals";
 
     @Override
     @GetMapping("/{id}")
-    public Meal get(@PathVariable int id){
+    public Meal get(@PathVariable int id) {
         return super.get(id);
     }
 
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id){
+    public void delete(@PathVariable int id) {
         super.delete(id);
     }
 
     @Override
     @GetMapping
-    public List<MealTo> getAll(){
+    public List<MealTo> getAll() {
         return super.getAll();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> createWithLocation(@RequestBody Meal meal){
-        log.info("Create {}",meal);
+    public ResponseEntity<Meal> createWithLocation(@RequestBody Meal meal) {
+        log.info("Create {}", meal);
         checkNew(meal);
         Meal createdMeal = service.create(meal, authUserId());
 
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL+"/{id}")
+                .path(REST_URL + "/{id}")
                 .buildAndExpand(createdMeal.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(createdMeal);
     }
 
     @Override
-    @PutMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Meal meal, @PathVariable int id){
+    public void update(@RequestBody Meal meal, @PathVariable int id) {
         super.update(meal, id);
     }
 
-    @PostMapping(value = "/filter",consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    //getBetween(@PathVariable LocalDate startDate,@PathVariable LocalTime startTime
-    //            , @PathVariable LocalDate endDate, @PathVariable LocalTime endTime)
-    public List<MealTo> getBetween(@RequestBody String startDateTime, @RequestBody String endDateTime){
 
-//        return super.getBetween(startDate, startTime, endDate, endTime);
-        return getAll();
-//        return super.getBetween(getLocalDate(startDateTime),getLocalTime(startDateTime), getLocalDate(endDateTime),getLocalTime(endDateTime));
+    @GetMapping(value = "/between")
+    public List<MealTo> getBetween(
+            @RequestParam(value = "startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+            @RequestParam(value="endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
+
+        return super.getBetween(startDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalDate(), endDateTime.toLocalTime());
     }
-
 
 
 }

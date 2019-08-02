@@ -2,6 +2,8 @@ package ru.javawebinar.topjava;
 
 import org.springframework.test.web.servlet.ResultMatcher;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.Month;
 import java.util.List;
@@ -11,8 +13,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.TestUtil.readFromJsonMvcResult;
 import static ru.javawebinar.topjava.TestUtil.readListFromJsonMvcResult;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserCaloriesPerDay;
 
 public class MealTestData {
+//    public static final ModelMatcher<Meal, String> MATCHER = new ToStringModelMatcher<>(Meal.class);
+//    public static final ModelMatcher<MealTo, String> MATCHER_WITH_EXCEED = new ToStringModelMatcher<>(MealTo.class);
+
     public static final int MEAL1_ID = START_SEQ + 2;
     public static final int ADMIN_MEAL_ID = START_SEQ + 8;
 
@@ -26,6 +32,8 @@ public class MealTestData {
     public static final Meal ADMIN_MEAL2 = new Meal(ADMIN_MEAL_ID + 1, of(2015, Month.JUNE, 1, 21, 0), "Админ ужин", 1500);
 
     public static final List<Meal> MEALS = List.of(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
+
+    public static final List<MealTo> MEALS_WITH_EXCESS = MealsUtil.getWithExcess(List.of(MEAL3,MEAL2,MEAL1),authUserCaloriesPerDay());
 
     public static Meal getCreated() {
         return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Созданный ужин", 300);
@@ -54,4 +62,18 @@ public class MealTestData {
     public static ResultMatcher contentJson(Meal... expected){
         return result -> assertMatch(readListFromJsonMvcResult(result, Meal.class), List.of(expected));
     }
+
+
+
+    public static ResultMatcher contentJsonWithExcess(Meal... expected){
+        return result -> assertMatchWithExcess(readListFromJsonMvcResult(result, MealTo.class), MealsUtil.getWithExcess(List.of(expected),authUserCaloriesPerDay()));
+    }
+
+    public static void assertMatchWithExcess(Iterable<MealTo> actual, Iterable<MealTo> expected) {
+        assertThat(actual).usingElementComparatorIgnoringFields("user").isEqualTo(expected);
+
+    }
+
+
+
 }
