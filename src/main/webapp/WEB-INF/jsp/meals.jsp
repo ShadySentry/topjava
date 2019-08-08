@@ -51,7 +51,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><spring:message code="meal.add"/></h4>
+                <h4 class="modal-title" id="modalTitle"><spring:message code="meal.add"/></h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -60,20 +60,20 @@
 
                     <div class="form-group">
                         <label for="dateTime" class="col-form-label"><spring:message code="meal.dateTime"/></label>
-                        <input  type="date" class="form-control" id="dateTime" name="dateTime"
-                                placeholder="<spring:message code="meal.dateTime"/>">
+                        <input type="datetime-local" class="form-control" id="dateTime" name="dateTime"
+                               placeholder="<spring:message code="meal.dateTime"/>">
                     </div>
 
                     <div class="form-group">
-                        <label for="description" class="col-form-label"><spring:message code="meal.description"/></label>
+                        <label for="description" class="col-form-label"><spring:message
+                                code="meal.description"/></label>
                         <input type="text" class="form-control" id="description" name="description"
                                placeholder="<spring:message code="meal.description"/>">
                     </div>
 
                     <div class="form-group">
                         <label for="calories" class="col-form-label"><spring:message code="meal.calories"/></label>
-                        <input type="number" class="form-control" id="calories" name="calories"
-                               placeholder="<spring:message code="meal.calories"/>">
+                        <input type="number" class="form-control" id="calories" name="calories" placeholder="1000">
                     </div>
                 </form>
             </div>
