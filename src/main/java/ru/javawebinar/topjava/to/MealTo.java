@@ -1,14 +1,24 @@
 package ru.javawebinar.topjava.to;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MealTo extends BaseTo {
 
+
+    @NotBlank
     private LocalDateTime dateTime;
 
+    @NotBlank
     private String description;
 
+    @Digits(fraction = 0, integer = 5, message = " must be positive with size less then 99999")
     private int calories;
 
     private boolean excess;
