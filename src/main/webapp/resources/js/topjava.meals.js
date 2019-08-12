@@ -3,7 +3,7 @@ const mealsAjaxUrl = "ajax/profile/meals/";
 function updateFilteredTable() {
     $.ajax({
         type: "GET",
-        url: mealsAjaxUrl+"/filter",
+        url: mealsAjaxUrl+"filter",
         data: $("#filter").serialize()
     }).done(updateTableByData);
 }
@@ -12,6 +12,18 @@ function clearFilter() {
     $("#filter")[0].reset();
     $.get("ajax/profile/meals/", updateTableByData);
 }
+
+$.ajaxSetup({
+    converters: {
+        "text json": function (stringData) {
+            const json = JSON.parse(stringData);
+            $(json).each(function () {
+                this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
+            });
+            return json;
+        }
+    }
+});
 
 $(function () {
     makeEditable({
@@ -56,7 +68,10 @@ $(function () {
                     0,
                     "desc"
                 ]
-            ]
+            ],
+            "createdRow":function (row, data, dataIndex) {
+                $(row).attr("data-mealExcess",data.excess)
+            }
         }),
         updateTable: updateFilteredTable
     });
