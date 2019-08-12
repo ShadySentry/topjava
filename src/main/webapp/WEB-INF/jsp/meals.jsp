@@ -36,7 +36,11 @@
                     </div>
                 </form>
             </div>
+
             <div class="card-footer text-right">
+<%----------------------date/time picker------------------%>
+<%--                <input id="datetimepicker" type="date/time/datetime-local" >--%>
+
                 <button class="btn btn-danger" onclick="clearFilter()">
                     <span class="fa fa-remove"></span>
                     <spring:message code="common.cancel"/>
@@ -96,8 +100,11 @@
 
                     <div class="form-group">
                         <label for="dateTime" class="col-form-label"><spring:message code="meal.dateTime"/></label>
-                        <input type="datetime-local" class="form-control" id="dateTime" name="dateTime"
-                               placeholder="<spring:message code="meal.dateTime"/>">
+                        <%----------------------date/time picker------------------%>
+                        <input id="datetimepicker" type="date/time/datetime-local" class="form-control" id="dateTime" name="dateTime"
+                        placeholder="<spring:message code="meal.dateTime"/>">
+<%--                        <input type="datetime-local" class="form-control" id="dateTime" name="dateTime"--%>
+<%--                               placeholder="<spring:message code="meal.dateTime"/>">--%>
                     </div>
 
                     <div class="form-group">
@@ -128,6 +135,11 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
+
+<%--<script type="text/javascript">--%>
+<%--    $('#datetimepicker').datetimepicker();--%>
+<%--</script>--%>
+
 <script type="text/javascript">
     const i18n = [];
     i18n["addTitle"] = '<spring:message code = "meal.add"/>';

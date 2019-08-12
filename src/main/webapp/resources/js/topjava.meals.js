@@ -7,6 +7,14 @@ function updateFilteredTable() {
         data: $("#filter").serialize()
     }).done(updateTableByData);
 }
+// date/time picker
+$('#datetimepicker').datetimepicker({
+    format:'d.m.Y H:i'
+});
+
+$('#image_button').click(function(){
+    jQuery('#datetimepicker').datetimepicker('show'); //support hide,show and destroy command
+});
 
 function clearFilter() {
     $("#filter")[0].reset();
@@ -38,12 +46,12 @@ $(function () {
             "columns": [
                 {
                     "data": "dateTime",
-                    "render": function (data, type, row) {
-                        if(type=="display"){
-                            return data.replace("T"," ")
-                        }
-                        return data;
-                    }
+                    // "render": function (data, type, row) {
+                    //     if(type=="display"){
+                    //         return data.replace("T"," ")
+                    //     }
+                    //     return data;
+                    // }
                 },
                 {
                     "data": "description"

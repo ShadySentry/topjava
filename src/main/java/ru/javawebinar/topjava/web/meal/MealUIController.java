@@ -30,7 +30,7 @@ public class MealUIController extends AbstractMealController {
 
     @Override
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Meal get(@PathVariable int id){
+    public Meal get(@PathVariable int id) {
         return super.get(id);
     }
 
@@ -41,31 +41,66 @@ public class MealUIController extends AbstractMealController {
         super.delete(id);
     }
 
-    @PostMapping("/")
-//    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> createOrUpdate(/*@Valid*/
-                               @RequestParam Integer id,
-                                         @RequestParam /*@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)*/ String dateTime,
-                                         @RequestParam String description,
-                                         @RequestParam int calories,
-                                         BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
-            StringBuilder sb= new StringBuilder();
-            bindingResult.getFieldErrors().forEach(fe->sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
-            return new ResponseEntity<>(sb.toString(),HttpStatus.UNPROCESSABLE_ENTITY);
-        }else{
-            Meal meal = new Meal(id, LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm")), description, calories);
+//    @PostMapping()
+////    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+//    public ResponseEntity<String> createOrUpdate(@Valid
+//                               @RequestParam Integer id,
+//                                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String dateTime,
+//                                         @RequestParam String description,
+//                                         @RequestParam int calories,
+//                                         BindingResult bindingResult) {
+//        if(bindingResult.hasErrors()){
+//            StringBuilder sb= new StringBuilder();
+//            bindingResult.getFieldErrors().forEach(fe->sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
+//            return new ResponseEntity<>(sb.toString(),HttpStatus.UNPROCESSABLE_ENTITY);
+//        }else{
+//            Meal meal = new Meal(id, LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm")), description, calories);
+//            if (meal.isNew()) {
+//                super.create(meal);
+//            }
+//            else{
+//                super.update(meal,id);
+//            }
+//
+//            return ResponseEntity.ok().build();
+//        }
+//
+//    }
+//                                              2
+//    @PostMapping()
+//    public ResponseEntity<String> createOrUpdate(/*@Valid*/ MealTo mealTo, BindingResult result) {
+//        if (result.hasErrors()) {
+//            StringBuilder sb = new StringBuilder();
+//            result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
+//            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+//        } else {
+//            Meal meal = MealsUtil.createFromTo(mealTo);
+//            if (meal.isNew()) {
+//                super.create(meal);
+//            } else {
+//                super.update(meal, mealTo.getId());
+//            }
+//            return ResponseEntity.ok().build();
+//        }
+//    }
+@PostMapping()
+    public ResponseEntity<String> createOrUpdate(/*@Valid*/ Meal meal, BindingResult result) {
+        if (result.hasErrors()) {
+            StringBuilder sb = new StringBuilder();
+            result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
+            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } else {
+
             if (meal.isNew()) {
                 super.create(meal);
+            } else {
+                super.update(meal, meal.getId());
             }
-            else{
-                super.update(meal,id);
-            }
-
             return ResponseEntity.ok().build();
         }
-
     }
+
+
 
     @Override
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)

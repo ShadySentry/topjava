@@ -1,25 +1,30 @@
 package ru.javawebinar.topjava.to;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class MealTo extends BaseTo {
+public class MealTo extends BaseTo implements Serializable {
 
+    private static final long serialVersionUID = 1L;
 
-    @NotNull
+//    @NotNull
     private LocalDateTime dateTime;
 
     @NotBlank
+    @Size(min = 1,max = 115)
     private String description;
 
-    @Digits(fraction = 0, integer = 5, message = " must be positive with size less then 99999")
-    private int calories;
+//    @Digits(fraction = 0, integer = 5, message = " must be positive with size less then 99999")
+    @Range(min = 0,max = 10000)
+    private Integer calories;
 
     private boolean excess;
 
