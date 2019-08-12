@@ -8,55 +8,6 @@
 <script type="text/javascript" src="resources/js/topjava.common.js" defer></script>
 <script type="text/javascript" src="resources/js/topjava.meals.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
-<%--<div class="jumbotron pt-4">--%>
-<%--    <div class="container">--%>
-<%--        <h3 class="text-center">Meals</h3>--%>
-<%--        <div class="card-body pb-0">--%>
-<%--            <form id="filter">--%>
-<%--                <div class="row">--%>
-<%--                    <div class="offset-1 col-2">--%>
-<%--                        <label for="startDate">From date </label>--%>
-<%--                        <input class=" form-control" name="startDate" id="startDate">--%>
-<%--                    </div>--%>
-<%--                    <div class="col-2">--%>
-<%--                        <label for="endDate">To date</label>--%>
-<%--                        <input class="form-control" name="endDate" id="endDate">--%>
-<%--                    </div>--%>
-<%--                    <div class="offset-2 col-2">--%>
-<%--                        <label for="startTime">From time</label>--%>
-<%--                        <input class="form-control" name="startTime" id="startTime">--%>
-<%--                    </div>--%>
-<%--                    <div class="col-2">--%>
-<%--                        <label for="endTime">To time </label>--%>
-<%--                        <input class="form-control" name="endTime" id="endTime"/>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </form>--%>
-<%--        </div>--%>
-<%--        <div class="card-footer text-right">--%>
-<%--            <button class="btn btn-primary" onclick="updateFilteredTable()">--%>
-<%--                <span class="fa fa-filter"></span>--%>
-<%--                Filter--%>
-<%--            </button>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--    <br/>--%>
-<%--    <button class="btn btn-primary" onclick="add()">--%>
-<%--        <span class="fa fa-plus"></span>--%>
-<%--        Add meal--%>
-<%--    </button>--%>
-<%--    <table class="table table-striped" id="dataTable">--%>
-<%--        <thead>--%>
-<%--        <tr>--%>
-<%--            <th>Date/Time</th>--%>
-<%--            <th>Description</th>--%>
-<%--            <th>Calories</th>--%>
-<%--            <th></th>--%>
-<%--            <th></th>--%>
-<%--        </tr>--%>
-<%--        </thead>--%>
-<%--    </table>--%>
-<%--</div>--%>
 
 <div class="jumbotron pt-4">
     <div class="container">
@@ -97,10 +48,12 @@
             </div>
         </div>
         <br/>
+
         <button class="btn btn-primary" onclick="add()">
             <span class="fa fa-plus"></span>
             <spring:message code="common.add"/>
         </button>
+
         <table class="table table-striped" id="datatable">
             <thead>
             <tr>
@@ -113,7 +66,7 @@
             </thead>
             <c:forEach items="${meals}" var="meal">
                 <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
-                <tr data-mealExcess="${meal.excess}">
+                <tr <%--data-mealExcess="${meal.excess}"--%>>
                     <td>
                             <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
                             <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
@@ -175,4 +128,13 @@
 </div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
+<script type="text/javascript">
+    const i18n = [];
+    i18n["addTitle"] = '<spring:message code = "meal.add"/>';
+    i18n["editTitle"] = '<spring:message code="meal.edit"/>';
+
+    <c:forEach var="key" items ='<%=new String[]{"common.deleted","common.saved","common.enabled","common.disabled","common.errorStatus","common.confirm"}%>'>
+    i18n["${key}"] = "<spring:message code="${key}"/>";
+    </c:forEach>
+</script>
 </html>

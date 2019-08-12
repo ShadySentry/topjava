@@ -34,7 +34,7 @@ public class MealUIController extends AbstractMealController {
 
     @PostMapping
 //    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> createOrUpdate(@Valid
+    public ResponseEntity<String> createOrUpdate(/*@Valid*/
                                @RequestParam Integer id,
                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
                                          @RequestParam String description,
@@ -53,7 +53,7 @@ public class MealUIController extends AbstractMealController {
                 super.update(meal,id);
             }
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok().build();
         }
 
     }

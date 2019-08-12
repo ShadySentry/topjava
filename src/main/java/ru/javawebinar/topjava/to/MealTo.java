@@ -12,7 +12,7 @@ import java.util.Objects;
 public class MealTo extends BaseTo {
 
 
-    @NotBlank
+    @NotNull
     private LocalDateTime dateTime;
 
     @NotBlank
