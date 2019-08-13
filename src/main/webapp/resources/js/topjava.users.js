@@ -13,7 +13,7 @@ function enable(chkbox, id) {
     }).fail(function () {
         $(chkbox).prop("checked", !enabled);
     });
-}
+};
 
 // $(document).ready(function () {
 $(function () {

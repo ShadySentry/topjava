@@ -23,6 +23,10 @@ public class MealsUtil {
         return new Meal(mealTo.getId(),mealTo.getDateTime(),mealTo.getDescription(),mealTo.getCalories());
     }
 
+    public static MealTo asTo(Meal meal){
+        return new MealTo(meal.getId(),meal.getDateTime(),meal.getDescription(),meal.getCalories(),false);
+    }
+
     public static List<MealTo> getWithExcess(Collection<Meal> meals, int caloriesPerDay) {
         return getFilteredWithExcess(meals, caloriesPerDay, meal -> true);
     }

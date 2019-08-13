@@ -28,10 +28,10 @@ public class MealUIController extends AbstractMealController {
         return super.getAll();
     }
 
-    @Override
+//    @Override
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Meal get(@PathVariable int id) {
-        return super.get(id);
+    public MealTo getTo(@PathVariable int id) {
+        return MealsUtil.asTo(super.get(id));
     }
 
     @Override
@@ -67,38 +67,39 @@ public class MealUIController extends AbstractMealController {
 //
 //    }
 //                                              2
-//    @PostMapping()
-//    public ResponseEntity<String> createOrUpdate(/*@Valid*/ MealTo mealTo, BindingResult result) {
-//        if (result.hasErrors()) {
-//            StringBuilder sb = new StringBuilder();
-//            result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
-//            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
-//        } else {
-//            Meal meal = MealsUtil.createFromTo(mealTo);
-//            if (meal.isNew()) {
-//                super.create(meal);
-//            } else {
-//                super.update(meal, mealTo.getId());
-//            }
-//            return ResponseEntity.ok().build();
-//        }
-//    }
-@PostMapping()
-    public ResponseEntity<String> createOrUpdate(/*@Valid*/ Meal meal, BindingResult result) {
+    @PostMapping()
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    public ResponseEntity<String> createOrUpdate(/*@Valid*/ MealTo mealTo, BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
             return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
         } else {
-
+            Meal meal = MealsUtil.createFromTo(mealTo);
             if (meal.isNew()) {
                 super.create(meal);
             } else {
-                super.update(meal, meal.getId());
+                super.update(meal, mealTo.getId());
             }
             return ResponseEntity.ok().build();
         }
     }
+//@PostMapping()
+//    public ResponseEntity<String> createOrUpdate(/*@Valid*/ Meal meal, BindingResult result) {
+//        if (result.hasErrors()) {
+//            StringBuilder sb = new StringBuilder();
+//            result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
+//            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+//        } else {
+//
+//            if (meal.isNew()) {
+//                super.create(meal);
+//            } else {
+//                super.update(meal, meal.getId());
+//            }
+//            return ResponseEntity.ok().build();
+//        }
+//    }
 
 
 

@@ -7,14 +7,55 @@ function updateFilteredTable() {
         data: $("#filter").serialize()
     }).done(updateTableByData);
 }
-// date/time picker
+// date/time picker for modal form
 $('#datetimepicker').datetimepicker({
-    format:'d.m.Y H:i'
+    format:'d-m-Y H:i'
 });
 
 $('#image_button').click(function(){
     jQuery('#datetimepicker').datetimepicker('show'); //support hide,show and destroy command
 });
+
+// date pickers for filter
+$('#startDate').datetimepicker({
+    timepicker:false,
+    format:'d-m-Y'
+});
+
+$('#image_button').click(function(){
+    jQuery('#startDate').datetimepicker('show'); //support hide,show and destroy command
+});
+
+$('#endDate').datetimepicker({
+    timepicker:false,
+    format:'d-m-Y'
+});
+
+$('#image_button').click(function(){
+    jQuery('#endDate').datetimepicker('show'); //support hide,show and destroy command
+});
+
+//time pickers for filter
+
+$('#startTime').datetimepicker({
+    datepicker:false,
+    format:'H:i'
+});
+
+$('#image_button').click(function(){
+    jQuery('#startTime').datetimepicker('show'); //support hide,show and destroy command
+});
+
+$('#endTime').datetimepicker({
+    datepicker:false,
+    format:'H:i'
+});
+
+$('#image_button').click(function(){
+    jQuery('#endTime').datetimepicker('show'); //support hide,show and destroy command
+});
+
+
 
 function clearFilter() {
     $("#filter")[0].reset();

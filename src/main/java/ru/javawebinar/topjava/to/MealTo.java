@@ -13,17 +13,18 @@ import java.util.Objects;
 
 public class MealTo extends BaseTo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4L;
 
 //    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateTime;
 
-    @NotBlank
-    @Size(min = 1,max = 115)
+//    @NotBlank
+//    @Size(min = 1,max = 115)
     private String description;
 
 //    @Digits(fraction = 0, integer = 5, message = " must be positive with size less then 99999")
-    @Range(min = 0,max = 10000)
+//    @Range(min = 0,max = 10000)
     private Integer calories;
 
     private boolean excess;
@@ -31,7 +32,7 @@ public class MealTo extends BaseTo implements Serializable {
     public MealTo() {
     }
 
-    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+    public MealTo(Integer id, LocalDateTime dateTime, String description, Integer calories, boolean excess) {
         super(id);
         this.dateTime = dateTime;
         this.description = description;
@@ -47,8 +48,28 @@ public class MealTo extends BaseTo implements Serializable {
         return description;
     }
 
-    public int getCalories() {
+    public Integer getCalories() {
         return calories;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCalories(Integer calories) {
+        this.calories = calories;
+    }
+
+    public void setExcess(boolean excess) {
+        this.excess = excess;
     }
 
     public boolean isExcess() {
