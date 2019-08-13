@@ -16,7 +16,7 @@ public class MealTo extends BaseTo implements Serializable {
     private static final long serialVersionUID = 4L;
 
 //    @NotNull
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateTime;
 
 //    @NotBlank

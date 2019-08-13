@@ -41,35 +41,8 @@ public class MealUIController extends AbstractMealController {
         super.delete(id);
     }
 
-//    @PostMapping()
-////    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-//    public ResponseEntity<String> createOrUpdate(@Valid
-//                               @RequestParam Integer id,
-//                                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String dateTime,
-//                                         @RequestParam String description,
-//                                         @RequestParam int calories,
-//                                         BindingResult bindingResult) {
-//        if(bindingResult.hasErrors()){
-//            StringBuilder sb= new StringBuilder();
-//            bindingResult.getFieldErrors().forEach(fe->sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
-//            return new ResponseEntity<>(sb.toString(),HttpStatus.UNPROCESSABLE_ENTITY);
-//        }else{
-//            Meal meal = new Meal(id, LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm")), description, calories);
-//            if (meal.isNew()) {
-//                super.create(meal);
-//            }
-//            else{
-//                super.update(meal,id);
-//            }
-//
-//            return ResponseEntity.ok().build();
-//        }
-//
-//    }
-//                                              2
     @PostMapping()
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    public ResponseEntity<String> createOrUpdate(/*@Valid*/ MealTo mealTo, BindingResult result) {
+    public ResponseEntity<String> createOrUpdate(/*@Valid*/ @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") MealTo mealTo, BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));

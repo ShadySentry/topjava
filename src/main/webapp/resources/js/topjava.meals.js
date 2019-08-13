@@ -9,7 +9,7 @@ function updateFilteredTable() {
 }
 // date/time picker for modal form
 $('#datetimepicker').datetimepicker({
-    format:'d-m-Y H:i'
+    format:'Y-m-dTh:i'
 });
 
 $('#image_button').click(function(){
