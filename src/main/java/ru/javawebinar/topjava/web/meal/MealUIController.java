@@ -28,7 +28,7 @@ public class MealUIController extends AbstractMealController {
         return super.getAll();
     }
 
-//    @Override
+    //    @Override
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public MealTo getTo(@PathVariable int id) {
         return MealsUtil.asTo(super.get(id));
@@ -42,7 +42,7 @@ public class MealUIController extends AbstractMealController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createOrUpdate(/*@Valid*/ @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) MealTo mealTo, BindingResult result) {
+    public ResponseEntity<String> createOrUpdate(@Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) MealTo mealTo, BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
@@ -57,14 +57,13 @@ public class MealUIController extends AbstractMealController {
             return ResponseEntity.ok().build();
         }
     }
-//@PostMapping()
-//    public ResponseEntity<String> createOrUpdate(/*@Valid*/ Meal meal, BindingResult result) {
+//    @PostMapping()
+//    public ResponseEntity<String> createOrUpdate(@Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Meal meal, BindingResult result) {
 //        if (result.hasErrors()) {
 //            StringBuilder sb = new StringBuilder();
 //            result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
 //            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
 //        } else {
-//
 //            if (meal.isNew()) {
 //                super.create(meal);
 //            } else {
@@ -73,8 +72,6 @@ public class MealUIController extends AbstractMealController {
 //            return ResponseEntity.ok().build();
 //        }
 //    }
-
-
 
     @Override
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)

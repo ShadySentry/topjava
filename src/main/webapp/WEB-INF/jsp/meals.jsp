@@ -122,7 +122,7 @@
                         <label for="calories" class="col-form-label"><spring:message code="meal.calories"/></label>
                         <input type="number" class="form-control" id="calories" name="calories" placeholder="1000">
                     </div>
-                    <input type="hidden" id="excess" name="excess">
+                    <input type="hidden" id="excess" name="excess" value="false">
                 </form>
             </div>
             <div class="modal-footer">
@@ -130,7 +130,7 @@
                     <span class="fa fa-close"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button type="button" class="btn btn-primary" onclick="save()">
+                <button type="button" class="btn btn-primary" onclick="saveModal()">
                     <span class="fa fa-check"></span>
                     <spring:message code="common.save"/>
                 </button>

@@ -45,10 +45,10 @@ function updateTableByData(data) {
 
 function save() {
 
-    var dateTime=$("#datetimepicker").val();
-    let date=$("#datetimepicker").val().replace(' ','T')+":00.000-05:00";
-
-    $("#datetimepicker").val(date);
+    // var dateTime=$("#datetimepicker").val();
+    // let date=$("#datetimepicker").val().replace(' ','T')+":00.000-05:00";
+    //
+    // $("#datetimepicker").val(date);
     $.ajax({
         type: "POST",
         url: context.ajaxUrl,
@@ -60,10 +60,16 @@ function save() {
     });
 }
 
-function saveWithDateTimeConversion() {
+function saveModal() {
 
-    var data=form.serialize();
-    // $.find ('datetimepicker',$.get('datetimepicker').replace(' ', 'T'));
+    var dateTime=$("#datetimepicker").val();
+    let date=$("#datetimepicker").val().replace(' ','T');
+
+    let excessVal = 'false';
+        $("#excess").val(false);
+
+
+    $("#datetimepicker").val(date);
     $.ajax({
         type: "POST",
         url: context.ajaxUrl,

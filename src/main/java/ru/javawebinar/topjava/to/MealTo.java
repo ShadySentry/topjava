@@ -1,5 +1,8 @@
 package ru.javawebinar.topjava.to;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,16 +18,16 @@ public class MealTo extends BaseTo implements Serializable {
 
     private static final long serialVersionUID = 4L;
 
-//    @NotNull
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateTime;
 
-//    @NotBlank
-//    @Size(min = 1,max = 115)
+    @NotBlank
+    @Size(min = 1,max = 115)
     private String description;
 
 //    @Digits(fraction = 0, integer = 5, message = " must be positive with size less then 99999")
-//    @Range(min = 0,max = 10000)
+    @Range(min = 0,max = 10000)
     private Integer calories;
 
     private boolean excess;
