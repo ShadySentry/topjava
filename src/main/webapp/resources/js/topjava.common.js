@@ -44,6 +44,26 @@ function updateTableByData(data) {
 }
 
 function save() {
+
+    var dateTime=$("#datetimepicker").val();
+    let date=$("#datetimepicker").val().replace(' ','T')+":00.000-05:00";
+
+    $("#datetimepicker").val(date);
+    $.ajax({
+        type: "POST",
+        url: context.ajaxUrl,
+        data: form.serialize()
+    }).done(function () {
+        $("#editRow").modal("hide");
+        context.updateTable();
+        successNoty("common.saved");
+    });
+}
+
+function saveWithDateTimeConversion() {
+
+    var data=form.serialize();
+    // $.find ('datetimepicker',$.get('datetimepicker').replace(' ', 'T'));
     $.ajax({
         type: "POST",
         url: context.ajaxUrl,

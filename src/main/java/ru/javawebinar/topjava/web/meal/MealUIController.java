@@ -42,7 +42,7 @@ public class MealUIController extends AbstractMealController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> createOrUpdate(/*@Valid*/ @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") MealTo mealTo, BindingResult result) {
+    public ResponseEntity<String> createOrUpdate(/*@Valid*/ @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) MealTo mealTo, BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
