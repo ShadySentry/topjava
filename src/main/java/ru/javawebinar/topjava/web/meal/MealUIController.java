@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.StringJoiner;
 
 @RestController
 @RequestMapping("/ajax/profile/meals")
@@ -44,9 +45,18 @@ public class MealUIController extends AbstractMealController {
     @PostMapping()
     public ResponseEntity<String> createOrUpdate(@Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) MealTo mealTo, BindingResult result) {
         if (result.hasErrors()) {
-            StringBuilder sb = new StringBuilder();
-            result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
-            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+            StringJoiner joiner = new StringJoiner("<br>");
+            result.getFieldErrors().forEach(
+                    fe -> {
+                        String msg = fe.getDefaultMessage();
+                        if (msg != null) {
+                            if (!msg.startsWith(fe.getField())) {
+                                msg = fe.getField() + ' ' + msg;
+                            }
+                            joiner.add(msg);
+                        }
+                    });
+            return ResponseEntity.unprocessableEntity().body(joiner.toString());
         } else {
             Meal meal = MealsUtil.createFromTo(mealTo);
             if (meal.isNew()) {

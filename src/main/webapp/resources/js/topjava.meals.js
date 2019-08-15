@@ -74,22 +74,6 @@ $.ajaxSetup({
     }
 });
 
-// $.ajaxSetup({
-//     converters: {
-//         "text json": function (stringData) {
-//             const json = JSON.parse(stringData);
-//             $(json).each(function () {
-//                 this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
-//             });
-//             return json;
-//         },
-//         "json text":function (stringData) {
-//             var sss= this.dateTime.replace(' ', 'T');
-//             return sss;
-//         }
-//     }
-// });
-
 $(function () {
     makeEditable({
         ajaxUrl: mealsAjaxUrl,
