@@ -2,13 +2,20 @@ let context, form;
 
 function makeEditable(ctx) {
     context = ctx;
-    form = $('#detailsForm');
-    $(".delete").click(function () {
-        if (confirm('Are you sure?')) {
-            deleteRow($(this).attr("id"));
-        }
-    });
+    context.datatableApi = $("#datatable").DataTable(
+        // https://api.jquery.com/jquery.extend/#jQuery-extend-deep-target-object1-objectN
+        $.extend(true, ctx.datatableOpts,
+            {
+                "ajax": {
+                    "url": context.ajaxUrl,
+                    "dataSrc": ""
+                },
+                "paging": false,
+                "info": true
+            }
+        ));
 
+    form = $('#detailsForm');
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
     });
@@ -94,4 +101,16 @@ function failNoty(jqXHR) {
         type: "error",
         layout: "bottomRight"
     }).show();
+}
+
+function renderEditBtn(data, type, row) {
+    if (type === "display") {
+        return "<a onclick='updateRow(" + row.id + ");'><span class='fa fa-pencil'></span></a>";
+    }
+}
+
+function renderDeleteBtn(data, type, row) {
+    if (type === "display") {
+        return "<a onclick='deleteRow(" + row.id + ");'><span class='fa fa-remove'></span></a>";
+    }
 }

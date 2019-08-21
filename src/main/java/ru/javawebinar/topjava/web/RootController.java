@@ -15,22 +15,17 @@ public class RootController {
 //    @Secured("ROLE_ADMIN")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users")
-    public String getUsers(Model model) {
-        model.addAttribute("users", userService.getAll());
+    public String getUsers() {
         return "users";
     }
 
-    @PostMapping("/users")
-    public String setUser(HttpServletRequest request) {
-        int userId = Integer.parseInt(request.getParameter("userId"));
-        SecurityUtil.setAuthUserId(userId);
-        return "redirect:meals";
+    @GetMapping(value = "/login")
+    public String login() {
+        return "login";
     }
 
     @GetMapping("/meals")
-    public String getMeals(Model model) {
-        model.addAttribute("meals",
-                MealsUtil.getWithExcess(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+    public String getMeals() {
         return "meals";
     }
 }

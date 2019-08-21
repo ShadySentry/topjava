@@ -37,7 +37,7 @@ public class JsonUtil {
         }
     }
 
-    public static <T> String writeAdditionProps(T obj, String addName, Object addValue) {
+    public static <T> String writeAdminAjaxControllerAdditionProps(T obj, String addName, Object addValue) {
         return writeAdditionProps(obj, Map.of(addName, addValue));
     }
 
