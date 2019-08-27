@@ -35,6 +35,10 @@ public class MealTestData {
         return new Meal(MEAL1_ID, MEAL1.getDateTime(), "Обновленный завтрак", 200);
     }
 
+    public static Meal getInvalidCalories() {
+        return new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Созданный ужин", 1);
+    }
+
     public static void assertMatch(Meal actual, Meal expected) {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "user");
     }
